@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>weather</title>
+  <link rel="stylesheet" href="weather.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+  <main>
+    <div class="search">
+      <input type="text" name="" id="city" placeholder="Location">
+      <i class="bi bi-search" id="searchIcon"></i>
+    </div>
+    <div class="location">
+      <i class="bi bi-geo-alt-fill"></i>
+      <h3>Tehran</h3>
+    </div>
+    <div class="date"></div>
+    <div id="result">
+      <div id="deg"></div>
+      <div id="deg2"></div>
+      <div id="condition"></div>
+    </div>
+  </main>
+</body>
+
+</html>
+<script>
+  // get date 
+  document.getElementsByClassName("date")[0].innerHTML = new Date().toLocaleDateString()
+
+  // default onload
+  getInfo("Tehran")
+
+  // search
+
+  document.getElementById("searchIcon").addEventListener("click", () => {
+    let city = document.getElementById("city").value
+    // console.log(city)
+    if (city.length == 0) {
+      alert("Please enter your location.")
+    }
+    else {
+      document.querySelector(".location>h3").innerHTML = city
+      getInfo(city)
+    }
+  })
+
+
+  // function to get information from API 
+
+  function getInfo(x) {
+    // console.log(x)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${x}&appid=17b07662885ccbb3486e7557ae60b9ea&units=metric`)
+      .then(para => para.json())
+      .then(data => {
+        // console.log(data.weather[0].icon)
+        document.getElementById("deg").innerHTML = `
+        <img src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png">
+        <h1>${parseInt
+            (data.main.temp)} <sup>o</sup></h1>
+        `
+        document.getElementById("deg2").innerHTML = `
+<span>${parseInt(data.main.temp_min)}<sup>o</sup> / </span>  
+<span>&nbsp; ${parseInt(data.main.temp_max)}<sup>o</sup></span>
+<span>&nbsp;  Feels like ${parseInt(data.main.feels_like)}<sup>o</sup></span>
+`
+        document.getElementById("condition").innerHTML = `
+<span>${data.weather[0].main}</span>
+`
+      })
+  }
+
+
+</script>
